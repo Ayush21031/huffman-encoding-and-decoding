@@ -1,11 +1,14 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<math.h>
+#include<string.h>
 
 struct Node{
     char data;
     int fq;
     struct Node * left;
     struct Node * right;
+    int * code;
 };
 
 
@@ -117,22 +120,35 @@ struct Node * createminheaptree(char finalarrchr[],int finalarrfq[],int count){
 
 }
 
-void codes(struct Node * root,int arr[],int c){
+void codes(struct Node * root,int arr[],int c,int height,int codearr[95][height]){
     if(root->left){
         arr[c] = 0;
-        codes(root->left,arr,c+1);
+        codes(root->left,arr,c+1,height,codearr);
     }
     if(root->right){
         arr[c] = 1;
-        codes(root->right,arr,c+1);
+        codes(root->right,arr,c+1,height,codearr);
     }
     if(root->left==NULL && root->right==NULL){
+        int sum=0;
         printf("%c: ",root->data);
+        int k = c-1;
+        int pos = (int)(root->data);
+        // printf("%d\n",k);
+        root->code = (int*)malloc((c-1)*sizeof(int));
         for(int i=0;i<c;i++){
-            printf("%d",arr[i]);
-            
+            // sum+= arr[i]*(pow(10,k));
+            // printf("%d ",sum);
+            // printf("%d",arr[i]);
+            root->code[i] = arr[i];
+            // k-=1; 
         }
+        for(int i=0;i<c;i++){
+            printf("%d",root->code[i]);
+        }
+        codearr[pos-32] = root->code;
         printf("\n");
+        // printf("\n%d\n",sum);
     }
 }
 
@@ -144,6 +160,14 @@ void inorder(struct Node * root){
     }
 }
 
+struct Node * search(struct minheap * heap,char s){
+    int size = sizeof(heap->array)/sizeof(struct Node);
+    for(int i=0;i<size;i++){
+        if(s==heap->array[i]){
+            return heap->array[i];
+        }
+    }
+}
 
 int main(){
     char arrchr[95];
@@ -192,11 +216,12 @@ int main(){
 
 
     struct Node * root  = createminheaptree(finalarrchr,finalarrfq,count);
-    inorder(root);
-    int arr[getheight(root)];
+    // inorder(root);
+    int height = getheight(root);
+    int arr[height];
     int c=0;
-    codes(root,arr,c);
-
+    int codearr[95][getheight(root)];
+    codes(root,arr,c,codearr,height);
 
 
 
