@@ -149,11 +149,15 @@ void inorder(struct Node * root){
 }
 
 
-void writinginfile(int height,int codearr[95],char input[],char output[]){
+void writinginfile(int height,int codearr[95],char input[],char output[],char finalarrchr[],int count){
     FILE *f ;
     f= fopen(input,"r");
     FILE *r;
     r = fopen(output,"w");
+    for(int i=0;i<count;i++){
+    int p = (int)(finalarrchr[i]);
+    fprintf(r,"%c %d\n",finalarrchr[i],codearr[p-32]);
+    }
     while (!feof(f)){
         char m = fgetc(f);
         int posn = (int)(m);
@@ -308,7 +312,7 @@ int main(){
     int codearr[95];
 
     codes(root,arr,c,height,codearr);
-    writinginfile(height,codearr,input,output);
+    writinginfile(height,codearr,input,output,finalarrchr,count);
     }
 
     else if(choice==1){ //-------------Decoding code--------------------------
