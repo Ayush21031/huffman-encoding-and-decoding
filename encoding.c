@@ -8,7 +8,7 @@ struct Node{
     int fq;
     struct Node * left;
     struct Node * right;
-    int * code;
+    int code;
 };
 
 
@@ -120,7 +120,7 @@ struct Node * createminheaptree(char finalarrchr[],int finalarrfq[],int count){
 
 }
 
-void codes(struct Node * root,int arr[],int c,int height,int codearr[95][height]){
+void codes(struct Node * root,int arr[],int c,int height,int codearr[95]){
     if(root->left){
         arr[c] = 0;
         codes(root->left,arr,c+1,height,codearr);
@@ -130,25 +130,19 @@ void codes(struct Node * root,int arr[],int c,int height,int codearr[95][height]
         codes(root->right,arr,c+1,height,codearr);
     }
     if(root->left==NULL && root->right==NULL){
-        int sum=0;
         printf("%c: ",root->data);
         int k = c-1;
         int pos = (int)(root->data);
-        // printf("%d\n",k);
-        root->code = (int*)malloc((c-1)*sizeof(int));
+        int sum = 0;
         for(int i=0;i<c;i++){
-            // sum+= arr[i]*(pow(10,k));
-            // printf("%d ",sum);
-            // printf("%d",arr[i]);
-            root->code[i] = arr[i];
-            // k-=1; 
+            sum = sum + arr[i]*(pow(10,k) + 1e-9);
+            k-=1;
+            printf("%d",arr[i]); 
         }
-        for(int i=0;i<c;i++){
-            printf("%d",root->code[i]);
-        }
-        codearr[pos-32] = root->code;
+        codearr[pos-32] = sum;
         printf("\n");
-        // printf("\n%d\n",sum);
+        printf("%d",sum);
+        printf("\n");
     }
 }
 
@@ -160,14 +154,22 @@ void inorder(struct Node * root){
     }
 }
 
-struct Node * search(struct minheap * heap,char s){
-    int size = sizeof(heap->array)/sizeof(struct Node);
-    for(int i=0;i<size;i++){
-        if(s==heap->array[i]){
-            return heap->array[i];
-        }
+
+void writinginfile(int height,int codearr[95]){
+    FILE *f ;
+    f= fopen("in.txt","r");
+    FILE *r;
+    r = fopen("out.txt","w");
+    while (!feof(f)){
+        char m = fgetc(f);
+        int posn = (int)(m);
+        fprintf(r,"%d",codearr[posn-32]);
+
     }
+    fclose(r);
+    fclose(f);
 }
+
 
 int main(){
     char arrchr[95];
@@ -181,9 +183,11 @@ int main(){
     }
     while (!feof(f)){
         char m = fgetc(f);
+        if(m!='\n'){
         int posn = (int)(m);
         arrchr[posn - 32] = m;
         arrfq[posn - 32] += 1;
+        }
     }
     fclose(f);
     int count=0;
@@ -210,20 +214,19 @@ int main(){
         }
     }
     count = count-1;
-    // for(int i=0;i<count;i++){
-    //     printf("%c %d\n",finalarrchr[i],finalarrfq[i]);
-    // }
-
-
+ 
     struct Node * root  = createminheaptree(finalarrchr,finalarrfq,count);
     // inorder(root);
     int height = getheight(root);
     int arr[height];
     int c=0;
-    int codearr[95][getheight(root)];
-    codes(root,arr,c,codearr,height);
+    int codearr[95];
 
-
+    codes(root,arr,c,height,codearr);
+    for(int i=0;i<95;i++){
+        printf("%d ",codearr[i]);
+    }
+    writinginfile(height,codearr);
 
     return 0;
 }
