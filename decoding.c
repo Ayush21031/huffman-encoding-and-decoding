@@ -57,18 +57,18 @@ void inorder(struct Node * node){
 }
 
 void writing_file(char m,struct Node * head,FILE *f){
+    FILE *k;
+    k = fopen("decode_encode.txt","w");
     struct Node * root = head;
     while(!feof(f)){
-        if(m=='\n'){
-            break;
-        }
         if(m=='1'){
                 if(root->left!=NULL && root->right!=NULL){
                     root = root->right;
                     m = fgetc(f);
                 }
                 else{
-                    printf("%c",root->data);
+                    char s = root->data;
+                    fprintf(k,"%c",root->data);
                     root = head;
             }
             }
@@ -78,11 +78,14 @@ void writing_file(char m,struct Node * head,FILE *f){
                 m = fgetc(f);
             }
             else{
-                printf("%c",root->data);
+                char s = root->data;
+                fprintf(k,"%c",root->data);
                 root = head;
             }
         }
+        
     }
+    fprintf(k,"%c",root->data);
 }
 
 int main(){
