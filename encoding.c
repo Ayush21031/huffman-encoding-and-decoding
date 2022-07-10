@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
-#include<string.h>
 
 struct Node{
     char data;
@@ -11,12 +10,9 @@ struct Node{
     int code;
 };
 
-
-
 struct minheap{
     struct Node** array;
     int size;
-    // int cap;
 };
 
 struct Node * createnode(char c,int fq){
@@ -30,10 +26,9 @@ struct Node * createnode(char c,int fq){
 }
 
 void swap(struct Node **n1,struct Node ** n2){
-    // printf("Entered swap..");
     struct Node *t = *n1;
-    *n1 = *n2; //
-    *n2 = t; //
+    *n1 = *n2;
+    *n2 = t;
 }
 
 int max(int a, int b){
@@ -51,7 +46,6 @@ int getheight(struct Node * root){
 }
 
 void heapify(struct minheap * heap , int i){
-    // printf("Entered heapify..");
     int smallest = i;
     int left = 2*i+1;
     int right = 2*i+2;
@@ -80,9 +74,7 @@ struct Node * findmin(struct minheap * heap){
 }
 
 void insertion(struct minheap *heap,struct Node * new){
-
     heap->size+=1; 
-
     int j = heap->size-1;
     while(j && heap->array[(j-1)/2]->fq>new->fq){
         swap(&heap->array[(j-1)/2],&heap->array[j]);
@@ -130,7 +122,7 @@ void codes(struct Node * root,int arr[],int c,int height,int codearr[95]){
         codes(root->right,arr,c+1,height,codearr);
     }
     if(root->left==NULL && root->right==NULL){
-        printf("%c: ",root->data);
+        printf("%c -> ",root->data);
         int k = c-1;
         int pos = (int)(root->data);
         int sum = 0;
@@ -141,8 +133,8 @@ void codes(struct Node * root,int arr[],int c,int height,int codearr[95]){
         }
         codearr[pos-32] = sum;
         printf("\n");
-        printf("%d",sum);
-        printf("\n");
+        // printf("%d",sum);
+        // printf("\n");
     }
 }
 
@@ -163,7 +155,9 @@ void writinginfile(int height,int codearr[95]){
     while (!feof(f)){
         char m = fgetc(f);
         int posn = (int)(m);
+        if(posn-32>=0){
         fprintf(r,"%d",codearr[posn-32]);
+        }
 
     }
     fclose(r);
@@ -223,9 +217,6 @@ int main(){
     int codearr[95];
 
     codes(root,arr,c,height,codearr);
-    for(int i=0;i<95;i++){
-        printf("%d ",codearr[i]);
-    }
     writinginfile(height,codearr);
 
     return 0;
